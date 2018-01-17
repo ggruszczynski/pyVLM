@@ -45,9 +45,9 @@ AoA_deg = 3.0  # Angle of attack [deg]
 Ry = rotation_matrix([0, 1, 0], np.deg2rad(AoA_deg))
 # we are going to rotate the geometry
 
-# reference values - to compare with book formulas
-AR = 2 * half_wing_span / chord  # TODO allow tapered wings in AR
-S = 2 * half_wing_span * chord  # TODO allow tapered wings in S
+# reference values - only to compare with book formulas
+AR = 2 * half_wing_span / chord  # TODO allow tapered wings AR in book formulas
+S = 2 * half_wing_span * chord  # TODO allow tapered wings S in book formulas
 
 ### MESH DENSITY ###
 ns = 15  # number of panels (spanwise)
