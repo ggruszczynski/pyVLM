@@ -1,6 +1,8 @@
 # pyVLM
 
-python implementation of 3D Vortex Lattice Method
+[![CircleCI](https://circleci.com/gh/ggruszczynski/pyVLM.svg?style=shield&circle-token=:circle-token)](https://circleci.com/gh/ggruszczynski/pyVLM)
+
+python implementation of a 3D Vortex Lattice Method.
 
 
 
