@@ -6,7 +6,8 @@ from unittest import TestCase
 from solver.vortices import \
     v_induced_by_finite_vortex_line, \
     v_induced_by_semi_infinite_vortex_line, \
-    v_induced_by_horseshoe_vortex
+    v_induced_by_horseshoe_vortex, \
+    is_in_vortex_core
 
 
 class TestVortices(TestCase):
@@ -70,3 +71,15 @@ class TestVortices(TestCase):
         v10 = v_induced_by_horseshoe_vortex(ctr_point_10, a_10, b_10, V)
 
         assert np.allclose(v01, v10)
+
+
+    def test_is_in_vortex_core(self):
+        assert not is_in_vortex_core([1 ,2, 3])
+        assert is_in_vortex_core([1e-10, 1e-10, 1e-10])
+
+        P = np.array([1e-12, 0, 0])
+        A = np.array([0, 0, 0])
+        B = np.array([0, 1e-12, 0])
+
+        calculated_vel = v_induced_by_finite_vortex_line(P, A, B)
+        assert_almost_equal(calculated_vel, [0,0,0])

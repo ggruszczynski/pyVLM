@@ -45,10 +45,6 @@ AoA_deg = 3.0 # Angle of attack [deg]
 Ry = rotation_matrix([0, 1, 0], np.deg2rad(AoA_deg))
 # we are going to rotate the geometry
 
-# reference values - to compare with book formulas
-AR = 2 * half_wing_span / chord  # TODO allow tapered wings AR in book formulas
-S = 2 * half_wing_span * chord  # TODO allow tapered wings S in book formulas
-
 ### MESH DENSITY ###
 ns = 20  # number of panels (spanwise)
 nc = 3 # number of panels (chordwise)
@@ -73,7 +69,7 @@ gamma_magnitude, v_ind_coeff = calc_circulation(V_app_infw, panels)
 V_induced = calc_induced_velocity(v_ind_coeff, gamma_magnitude)
 V_app_fw = V_app_infw + V_induced
 
-assert is_no_flux_BC_satisfied(V_app_fw, gamma_magnitude, panels, v_ind_coeff)
+assert is_no_flux_BC_satisfied(V_app_fw, panels)
 
 F = calc_force_wrapper(V_app_infw, gamma_magnitude, panels, rho=rho)
 p = calc_pressure(F, panels)
@@ -83,6 +79,9 @@ print(gamma_magnitude)
 print("DONE")
 
 ### compare vlm with book formulas ###
+# reference values - to compare with book formulas
+AR = 2 * half_wing_span / chord  # TODO allow tapered wings AR in book formulas
+S = 2 * half_wing_span * chord  # TODO allow tapered wings S in book formulas
 CL_expected, CD_ind_expected = get_CL_CD_from_coeff(AR, AoA_deg)
 
 total_F = np.sum(F, axis=0)
