@@ -24,6 +24,14 @@ class TestPanels(TestCase):
 
         assert_almost_equal(calculated_area, expected_area)
 
+    def test_pressure(self):
+        from solver.forces import calc_pressure
+
+        p = calc_pressure(force=np.array([[0,0,1],[3,2,1]]),
+                          panels=np.array([self.panel, self.panel]))
+
+        assert_almost_equal(p,[0.005,0.005])
+
     def test_get_ctr_point_postion(self):
         ctr_point = self.panel.get_ctr_point_postion()
         expected_ctr_point= [7.5, 5, 0]
@@ -44,6 +52,13 @@ class TestPanels(TestCase):
                                          [ 12.5,  10. ,   0. ]]
 
         assert_almost_equal(expected_vortex_riing_position, vortex_ring_position)
+
+    def test_get_vortex_ring_induced_velocity(self):
+        v_ind =  self.panel.get_vortex_ring_induced_velocity()
+        v_ind_expected = [0,0,-0.09003163161571061]
+
+        assert_almost_equal(v_ind,v_ind_expected)
+
 
     def test_panel_is_not_plane(self):
         with self.assertRaises(ValueError) as context:
