@@ -59,4 +59,11 @@ class TestVLM_Solver(TestCase):
 
         V_induced = calc_induced_velocity(v_ind_coeff, gamma_magnitude)
         V_app_fs = V_free_stream + V_induced
-        assert is_no_flux_BC_satisfied(V_app_fs, gamma_magnitude, self.panels, v_ind_coeff)
+        assert is_no_flux_BC_satisfied(V_app_fs, self.panels)
+
+
+        with self.assertRaises(ValueError) as context:
+            V_broken = 1e10 *V_app_fs
+            is_no_flux_BC_satisfied(V_broken, self.panels)()
+
+        self.assertTrue("Solution error, there is a significant flow through panel!" in context.exception.args[0])

@@ -30,6 +30,12 @@ class TestPanels(TestCase):
 
         assert_almost_equal(expected_ctr_point, ctr_point)
 
+    def test_get_cp_postion(self):
+        cp = self.panel.get_cp_position()
+        expected_ctr_point= [2.5, 5, 0]
+
+        assert_almost_equal(expected_ctr_point, cp)
+
     def test_get_vortex_ring_position(self):
         vortex_ring_position = self.panel.get_vortex_ring_position()
         expected_vortex_riing_position = [[ 12.5,   0. ,   0. ],
@@ -38,3 +44,13 @@ class TestPanels(TestCase):
                                          [ 12.5,  10. ,   0. ]]
 
         assert_almost_equal(expected_vortex_riing_position, vortex_ring_position)
+
+    def test_panel_is_not_plane(self):
+        with self.assertRaises(ValueError) as context:
+            points = [np.array([10, 0, 0]), np.array([0, 666, 0]),
+                      np.array([0, 10, 0]), np.array([10, 10, 0])]
+
+            panel = Panel(*points)
+
+        self.assertTrue("Points on Panel are not on the same plane!" in context.exception.args[0])
+

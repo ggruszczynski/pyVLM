@@ -7,9 +7,7 @@ def normalize(x):
     return xn
 
 def is_in_vortex_core(tab):
-    for t in tab:
-        if norm(t) < np.power(10.0, -10.0):
-            return True
+    return norm(tab) < 1e-9
 
 def v_induced_by_semi_infinite_vortex_line(P, A, r0, gamma=1):
     """
