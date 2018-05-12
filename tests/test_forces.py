@@ -1,10 +1,9 @@
-
 import numpy as np
 
 from solver.vlm_solver import calc_circulation
 from solver.mesher import make_panels_from_points
 from solver.geometry_calc import rotation_matrix
-from solver.CL_CD_from_coeff import get_CL_CD_from_coeff
+from solver.coeff_formulas import get_CL_CD_free_wing
 from solver.forces import calc_force_wrapper, calc_pressure
 from solver.vlm_solver import is_no_flux_BC_satisfied, calc_induced_velocity
 
@@ -14,8 +13,8 @@ from solver.geometry_calc import rotation_matrix
 from unittest import TestCase
 from numpy.linalg import norm
 
-class TestForces(TestCase):
 
+class TestForces(TestCase):
     def test_CL(self):
         ### WING DEFINITION ###
         # Parameters #
@@ -62,18 +61,18 @@ class TestForces(TestCase):
         F = calc_force_wrapper(V_app_infw, gamma_magnitude, panels, rho=rho)
         p = calc_pressure(F, panels)
 
-        ### compare vlm with book formulas ###
-        # reference values - to compare with book formulas
+        ### compare vlm with book coeff_formulas ###
+        # reference values - to compare with book coeff_formulas
         AR = 2 * half_wing_span / chord
         S = 2 * half_wing_span * chord
-        CL_expected, CD_ind_expected = get_CL_CD_from_coeff(AR, AoA_deg)
+        CL_expected, CD_ind_expected = get_CL_CD_free_wing(AR, AoA_deg)
 
         total_F = np.sum(F, axis=0)
         q = 0.5 * rho * (np.linalg.norm(V) ** 2) * S
         CL_vlm = total_F[2] / q
         CD_vlm = total_F[0] / q
 
-        rel_err_CL = abs((CL_expected - CL_vlm)/CL_expected)
+        rel_err_CL = abs((CL_expected - CL_vlm) / CL_expected)
         rel_err_CD = abs((CD_ind_expected - CD_vlm) / CD_ind_expected)
         assert rel_err_CL < 0.01
         assert rel_err_CD < 0.18

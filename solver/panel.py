@@ -61,8 +61,8 @@ class Panel(object):
             step = p[i + 1] - p[i]
             path.append(step)
 
-        path.append(p[3] - p[0])
-        path.append(p[0] - p[1])
+        # path.append(p[3] - p[0])
+        # path.append(p[0] - p[1])
 
         area = 0
         for i in range(len(path) - 1):

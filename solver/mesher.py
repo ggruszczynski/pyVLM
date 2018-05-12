@@ -2,6 +2,21 @@ import numpy as np
 from solver.panel import Panel
 
 
+def join_panels(panels1, panels2):
+    joined_panels = []
+    for p1, p2 in zip(panels1, panels2):
+        temp = np.append(p1, p2)
+        joined_panels.append(temp)
+    return np.array(joined_panels)
+
+def flat_panels(panels):
+    joined_panels = []
+
+    for p in panels:
+        joined_panels.append(p.flatten())
+
+    return np.array(joined_panels).flatten()
+
 def make_panels_from_points(points, grid_size):
     """
     this is the main meshing method
@@ -56,4 +71,4 @@ def make_panels_from_mesh(mesh):
                           p3 = pNW)
             panels[i].append(panel)
 
-    return np.array(panels)
+    return np.array(panels)  # TODO

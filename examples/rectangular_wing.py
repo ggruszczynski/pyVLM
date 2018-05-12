@@ -3,7 +3,7 @@ import numpy as np
 from solver.vlm_solver import calc_circulation
 from solver.mesher import make_panels_from_points
 from solver.geometry_calc import rotation_matrix
-from solver.CL_CD_from_coeff import get_CL_CD_from_coeff
+from solver.coeff_formulas import get_CL_CD_free_wing
 from solver.forces import calc_force_wrapper, calc_pressure
 from solver.vlm_solver import is_no_flux_BC_satisfied, calc_induced_velocity
 
@@ -32,7 +32,7 @@ from solver.vlm_solver import is_no_flux_BC_satisfied, calc_induced_velocity
 ### WING DEFINITION ###
 # Parameters #
 chord = 1.  # chord length
-half_wing_span = 10.  # wing span length
+half_wing_span = 10.  # half wing span length
 
 # Points defining wing (x,y,z) #
 le_NW = np.array([0., half_wing_span, 0.])  # leading edge North - West coordinate
@@ -45,9 +45,9 @@ AoA_deg = 3.0  # Angle of attack [deg]
 Ry = rotation_matrix([0, 1, 0], np.deg2rad(AoA_deg))
 # we are going to rotate the geometry
 
-# reference values - only to compare with book formulas
-AR = 2 * half_wing_span / chord  # TODO allow tapered wings AR in book formulas
-S = 2 * half_wing_span * chord  # TODO allow tapered wings S in book formulas
+# reference values - only to compare with book coeff_formulas
+AR = 2 * half_wing_span / chord  # TODO allow tapered wings AR in book coeff_formulas
+S = 2 * half_wing_span * chord  # TODO allow tapered wings S in book coeff_formulas
 
 ### MESH DENSITY ###
 ns = 15  # number of panels (spanwise)
@@ -82,8 +82,8 @@ print("gamma_magnitude: \n")
 print(gamma_magnitude)
 print("DONE")
 
-### compare vlm with book formulas ###
-CL_expected, CD_ind_expected = get_CL_CD_from_coeff(AR, AoA_deg)
+### compare vlm with book coeff_formulas ###
+CL_expected, CD_ind_expected = get_CL_CD_free_wing(AR, AoA_deg)
 
 total_F = np.sum(F, axis=0)
 q = 0.5 * rho * (np.linalg.norm(V) ** 2) * S

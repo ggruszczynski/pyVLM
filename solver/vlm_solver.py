@@ -2,12 +2,11 @@ import numpy as np
 
 
 def assembly_sys_of_eq(V_app_infw, panels):
-    rows, cols = panels.shape
-    N = rows * cols
+    panels1D = panels.flatten()
+    N = len(panels1D)
+
     A = np.zeros(shape=(N, N))  # Aerodynamic Influence Coefficient matrix
     RHS = np.zeros(shape=N)
-
-    panels1D = panels.flatten()
     v_ind_coeff = np.full((N, N, 3), 0., dtype=float)
 
     for i in range(0, N):
@@ -43,11 +42,10 @@ def calc_induced_velocity(v_ind_coeff, gamma_magnitude):
 
 
 def is_no_flux_BC_satisfied(V_app_fw, panels):
-    rows, cols = panels.shape
-    N = rows * cols
+    panels1D = panels.flatten()
+    N = len(panels1D)
     flux_through_panel = np.zeros(shape=N)
 
-    panels1D = panels.flatten()
     for i in range(0, N):
         panel_surf_normal = panels1D[i].get_normal_to_panel()
         flux_through_panel[i] = -np.dot(V_app_fw[i], panel_surf_normal)
