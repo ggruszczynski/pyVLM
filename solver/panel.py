@@ -36,21 +36,12 @@ class Panel(object):
         self._check_in_plane()
 
     def _check_in_plane(self):
-        n1 = self.get_normal_to_panel()
-
-        P3P2 = self.p2 - self.p3
+        P1P2 = self.p1 - self.p2
         P3P4 = self.p4 - self.p3
-        n2 = np.cross(P3P2, P3P4)
-        n2 = normalize(n2)
 
-        is_n1_n2_parallel = np.cross(n1, n2)
-        is_n1_n2_parallel = np.linalg.norm(is_n1_n2_parallel)
-
-        if is_n1_n2_parallel < np.power(10.0, -12.0):
-            return True
-
-        raise ValueError("Points on Panel are not on the same plane: %d %d %d %d"
-                         % self.p1, self.p2, self.p3, self.p3)
+        vec = np.cross(P1P2, P3P4)
+        if np.linalg.norm(vec) > 1e-12:
+            raise ValueError("Points on Panel are not on the same plane!")
 
 
     def get_normal_to_panel(self):
@@ -70,8 +61,8 @@ class Panel(object):
             step = p[i + 1] - p[i]
             path.append(step)
 
-        path.append(p[3] - p[0])
-        path.append(p[0] - p[1])
+        # path.append(p[3] - p[0])
+        # path.append(p[0] - p[1])
 
         area = 0
         for i in range(len(path) - 1):
@@ -113,7 +104,7 @@ class Panel(object):
         ctr_p = self.p2 + p2_p1 * (3. / 4.) + p1_p4 / 2.
         return ctr_p
 
-    def get_cp_postion(self):
+    def get_cp_position(self):
         """
          For a given panel defined by points P1, P2, P3 and P4
          returns the position of the centre of pressure

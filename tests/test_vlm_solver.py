@@ -1,4 +1,3 @@
-
 import numpy as np
 from numpy.testing import assert_almost_equal
 from unittest import TestCase
@@ -8,11 +7,11 @@ from solver.mesher import make_panels_from_points
 from solver.vlm_solver import \
     assembly_sys_of_eq, \
     calc_circulation, \
-    is_no_flux_BC_satisfied,\
+    is_no_flux_BC_satisfied, \
     calc_induced_velocity
 
-class TestVLM_Solver(TestCase):
 
+class TestVLM_Solver(TestCase):
     def setUp(self):
         # GEOMETRY DEFINITION #
         # Parameters
@@ -35,7 +34,7 @@ class TestVLM_Solver(TestCase):
             [le_root_coord, te_root_coord, le_tip_coord, te_tip_coord],
             [nc, ns])
 
-        self.N = ns*nc
+        self.N = ns * nc
 
     def test_matrix_symmetry(self):
         import random
@@ -59,4 +58,10 @@ class TestVLM_Solver(TestCase):
 
         V_induced = calc_induced_velocity(v_ind_coeff, gamma_magnitude)
         V_app_fs = V_free_stream + V_induced
-        assert is_no_flux_BC_satisfied(V_app_fs, gamma_magnitude, self.panels, v_ind_coeff)
+        assert is_no_flux_BC_satisfied(V_app_fs, self.panels)
+
+        with self.assertRaises(ValueError) as context:
+            V_broken = 1e10 * V_app_fs
+            is_no_flux_BC_satisfied(V_broken, self.panels)()
+
+        self.assertTrue("Solution error, there is a significant flow through panel!" in context.exception.args[0])

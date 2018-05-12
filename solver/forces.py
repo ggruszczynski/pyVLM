@@ -3,7 +3,7 @@ from solver.vlm_solver import calc_induced_velocity
 
 
 def calc_force_wrapper(V_app_infw, gamma_magnitude, panels, rho=1):
-    from solver.vortices import v_induced_by_semi_infinite_vortex_line
+    from solver.vortices import v_induced_by_semi_infinite_vortex_line, v_induced_by_finite_vortex_line
     """
     force = rho* (V_app_fw_at_cp x gamma)
     :param V: apparent wind finite sail (including all induced velocities) at control point
@@ -17,19 +17,10 @@ def calc_force_wrapper(V_app_infw, gamma_magnitude, panels, rho=1):
     v_ind_coeff = np.full((N, N, 3), 0., dtype=float)
 
     for i in range(0, N):
-        cp = panels_1d[i].get_cp_postion()
+        cp = panels_1d[i].get_cp_position()
         for j in range(0, N):
             # velocity induced at i-th control point by j-th vortex
             v_ind_coeff[i][j] = panels_1d[j].get_horse_shoe_induced_velocity(cp, V_app_infw[j])
-
-            # TODO why the code below returns similar force?
-            # [A, B, C, D] = panels1_d[j].get_vortex_ring_position()
-            # vB = v_induced_by_semi_infinite_vortex_line(cp, C,  V[j], gamma=1)
-            # # vAB = v_induced_by_finite_vortex_line(cp, A, B, gamma=1)
-            # vA = v_induced_by_semi_infinite_vortex_line(cp, B,  V[j], gamma=-1)
-            # v = vA + vB
-            #
-            # v_ind_coeff[i][j] = v
 
     V_induced = calc_induced_velocity(v_ind_coeff, gamma_magnitude)
     V_at_cp = V_app_infw + V_induced

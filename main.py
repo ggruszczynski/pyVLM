@@ -32,22 +32,18 @@ from solver.vlm_solver import is_no_flux_BC_satisfied, calc_induced_velocity
 ### WING DEFINITION ###
 #Parameters #
 chord = 1.  # chord length
-half_wing_span = 5.8 # wing span length
+half_wing_span = 10.8  # half wing span length
 
 # Points defining wing (x,y,z) #
 le_NW = np.array([0., half_wing_span, 0.])  # leading edge North - West coordinate
-le_SW = np.array([0., -half_wing_span, 0.]) # leading edge South - West coordinate
+le_SW = np.array([0., -half_wing_span, 0.])  # leading edge South - West coordinate
 
 te_NE = np.array([chord, half_wing_span, 0.])  # trailing edge North - East coordinate
-te_SE = np.array([chord, -half_wing_span, 0.]) # trailing edge South - East coordinate
+te_SE = np.array([chord, -half_wing_span, 0.])  # trailing edge South - East coordinate
 
 AoA_deg = 3.0 # Angle of attack [deg]
 Ry = rotation_matrix([0, 1, 0], np.deg2rad(AoA_deg))
 # we are going to rotate the geometry
-
-# reference values - to compare with book formulas
-AR = 2 * half_wing_span / chord  # TODO allow tapered wings AR in book formulas
-S = 2 * half_wing_span * chord  # TODO allow tapered wings S in book formulas
 
 ### MESH DENSITY ###
 ns = 20  # number of panels (spanwise)
@@ -73,16 +69,19 @@ gamma_magnitude, v_ind_coeff = calc_circulation(V_app_infw, panels)
 V_induced = calc_induced_velocity(v_ind_coeff, gamma_magnitude)
 V_app_fw = V_app_infw + V_induced
 
-assert is_no_flux_BC_satisfied(V_app_fw, gamma_magnitude, panels, v_ind_coeff)
+assert is_no_flux_BC_satisfied(V_app_fw, panels)
 
 F = calc_force_wrapper(V_app_infw, gamma_magnitude, panels, rho=rho)
 p = calc_pressure(F, panels)
 
-print("gamma_magnitude: \n")
-print(gamma_magnitude)
-print("DONE")
+# print("gamma_magnitude: \n")
+# print(gamma_magnitude)
+print("=== DONE ===")
 
-### compare vlm with book formulas ###
+### compare vlm with book coeff_formulas ###
+# reference values - to compare with book coeff_formulas
+AR = 2 * half_wing_span / chord
+S = 2 * half_wing_span * chord
 CL_expected, CD_ind_expected = get_CL_CD_from_coeff(AR, AoA_deg)
 
 total_F = np.sum(F, axis=0)
@@ -92,5 +91,5 @@ CD_vlm = total_F[0] / q
 
 print("\nCL_expected %f \t CD_ind_expected %f" % (CL_expected, CD_ind_expected))
 print("CL_vlm %f \t CD_vlm %f" % (CL_vlm, CD_vlm))
-print("\n\ntotal_F %s" % str(total_F))
+print("\n\ntotal_F [N] %s" % str(total_F))
 print("=== END ===")
