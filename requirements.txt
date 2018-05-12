@@ -2,3 +2,5 @@ numpy
 matplotlib
 codecov
 scipy
+pytest
+
