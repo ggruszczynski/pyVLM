@@ -71,4 +71,4 @@ def make_panels_from_mesh(mesh):
                           p3 = pNW)
             panels[i].append(panel)
 
-    return np.array(panels)
+    return np.array(panels)  # TODO

@@ -3,7 +3,7 @@ import numpy as np
 from solver.vlm_solver import calc_circulation
 from solver.mesher import make_panels_from_points
 from solver.geometry_calc import rotation_matrix
-from solver.CL_CD_from_coeff import get_CL_CD_from_coeff
+from solver.coeff_formulas import get_CL_CD_free_wing
 from solver.forces import calc_force_wrapper, calc_pressure
 from solver.vlm_solver import is_no_flux_BC_satisfied, calc_induced_velocity
 
@@ -65,7 +65,7 @@ class TestForces(TestCase):
         # reference values - to compare with book coeff_formulas
         AR = 2 * half_wing_span / chord
         S = 2 * half_wing_span * chord
-        CL_expected, CD_ind_expected = get_CL_CD_from_coeff(AR, AoA_deg)
+        CL_expected, CD_ind_expected = get_CL_CD_free_wing(AR, AoA_deg)
 
         total_F = np.sum(F, axis=0)
         q = 0.5 * rho * (np.linalg.norm(V) ** 2) * S
