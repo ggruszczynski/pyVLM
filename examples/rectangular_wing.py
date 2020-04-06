@@ -73,7 +73,7 @@ gamma_magnitude, v_ind_coeff = calc_circulation(V_app_infw, panels)
 V_induced = calc_induced_velocity(v_ind_coeff, gamma_magnitude)
 V_app_fw = V_app_infw + V_induced
 
-assert is_no_flux_BC_satisfied(V_app_fw, gamma_magnitude, panels, v_ind_coeff)
+assert is_no_flux_BC_satisfied(V_app_fw, panels)
 
 F = calc_force_wrapper(V_app_infw, gamma_magnitude, panels, rho=rho)
 p = calc_pressure(F, panels)
