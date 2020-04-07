@@ -20,6 +20,10 @@ jobs:
     steps:
       - checkout
 
+      - run:
+          name: "What branch am I on?"
+          command: echo ${CIRCLE_BRANCH}
+
       # Download and cache dependencies
       - restore_cache:
           keys:

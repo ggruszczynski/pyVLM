@@ -172,3 +172,4 @@ fig.savefig(fig_name, bbox_inches='tight')
 plt.show()
 # plt.close(fig)  # close the figure
 print("bye")
+
