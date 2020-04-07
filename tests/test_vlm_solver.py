@@ -2,9 +2,9 @@ import numpy as np
 from numpy.testing import assert_almost_equal
 from unittest import TestCase
 
-from solver.mesher import make_panels_from_points
+from Solver.mesher import make_panels_from_points
 
-from solver.vlm_solver import \
+from Solver.vlm_solver import \
     assembly_sys_of_eq, \
     calc_circulation, \
     is_no_flux_BC_satisfied, \

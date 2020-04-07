@@ -11,7 +11,7 @@ def assembly_sys_of_eq(V_app_infw, panels):
 
     for i in range(0, N):
         panel_surf_normal = panels1D[i].get_normal_to_panel()
-        ctr_p = panels1D[i].get_ctr_point_postion()
+        ctr_p = panels1D[i].get_ctr_point_position()
         RHS[i] = -np.dot(V_app_infw[i], panel_surf_normal)
 
         for j in range(0, N):

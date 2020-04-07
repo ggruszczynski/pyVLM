@@ -2,7 +2,7 @@ import numpy as np
 from numpy.testing import assert_almost_equal
 from unittest import TestCase
 
-from solver.coeff_formulas import get_CL_CD_free_wing
+from Solver.coeff_formulas import get_CL_CD_free_wing
 
 
 class TestMesher(TestCase):

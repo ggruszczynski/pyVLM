@@ -1,15 +1,15 @@
 import numpy as np
 
-from solver.vlm_solver import calc_circulation
-from solver.mesher import make_panels_from_points
-from solver.geometry_calc import rotation_matrix
-from solver.coeff_formulas import get_CL_CD_free_wing
-from solver.forces import calc_force_wrapper, calc_pressure
-from solver.vlm_solver import is_no_flux_BC_satisfied, calc_induced_velocity
+from Solver.vlm_solver import calc_circulation
+from Solver.mesher import make_panels_from_points
+from Solver.geometry_calc import rotation_matrix
+from Solver.coeff_formulas import get_CL_CD_free_wing
+from Solver.forces import calc_force_wrapper, calc_pressure
+from Solver.vlm_solver import is_no_flux_BC_satisfied, calc_induced_velocity
 
 from numpy.testing import assert_almost_equal
 
-from solver.geometry_calc import rotation_matrix
+from Solver.geometry_calc import rotation_matrix
 from unittest import TestCase
 from numpy.linalg import norm
 

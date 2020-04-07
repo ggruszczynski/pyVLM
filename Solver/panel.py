@@ -1,6 +1,6 @@
 import numpy as np
 
-from solver.vortices import \
+from Solver.vortices import \
     v_induced_by_semi_infinite_vortex_line, \
     v_induced_by_finite_vortex_line, \
     v_induced_by_horseshoe_vortex, \
@@ -72,8 +72,18 @@ class Panel(object):
 
         return area
 
+    def get_panel_span(self):
+        [_, B, C, _] = self.get_vortex_ring_position()
+        BC = C-B
 
-    def get_ctr_point_postion(self):
+        dl = 0
+        for i in range(3):
+            dl += BC[i]*BC[i]
+        span = np.sqrt(dl)
+        return span
+
+
+    def get_ctr_point_position(self):
         """
          For a given panel defined by points P1, P2, P3 and P4
          returns the position of the control point P.
@@ -176,7 +186,7 @@ class Panel(object):
 
 
     def get_vortex_ring_induced_velocity(self):
-        ctr_p = self.get_ctr_point_postion()
+        ctr_p = self.get_ctr_point_position()
         [A, B, C, D] = self.get_vortex_ring_position()
 
         v_AB = v_induced_by_finite_vortex_line(ctr_p, A, B)

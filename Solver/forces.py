@@ -1,9 +1,9 @@
 import numpy as np
-from solver.vlm_solver import calc_induced_velocity
+from Solver.vlm_solver import calc_induced_velocity
 
 
 def calc_force_wrapper(V_app_infw, gamma_magnitude, panels, rho=1):
-    from solver.vortices import v_induced_by_semi_infinite_vortex_line, v_induced_by_finite_vortex_line
+    from Solver.vortices import v_induced_by_semi_infinite_vortex_line, v_induced_by_finite_vortex_line
     """
     force = rho* (V_app_fw_at_cp x gamma)
     :param V: apparent wind finite sail (including all induced velocities) at control point

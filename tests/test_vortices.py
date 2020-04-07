@@ -2,7 +2,7 @@ import numpy as np
 from numpy.testing import assert_almost_equal
 from unittest import TestCase
 
-from solver.vortices import \
+from Solver.vortices import \
     v_induced_by_finite_vortex_line, \
     v_induced_by_semi_infinite_vortex_line, \
     v_induced_by_horseshoe_vortex, \

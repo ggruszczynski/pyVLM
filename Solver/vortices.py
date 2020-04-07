@@ -61,7 +61,7 @@ def v_induced_by_semi_infinite_vortex_line(P, A, r0, gamma=1):
     ap = P - A
     norm_ap = norm(ap)
 
-    v_ind = np.cross(u_inf, ap) / (norm_ap *(norm_ap - np.dot(u_inf,ap))) # TODO consider checking is_in_vortex_core
+    v_ind = np.cross(u_inf, ap) / (norm_ap *(norm_ap - np.dot(u_inf, ap)))  # TODO consider checking is_in_vortex_core
     v_ind *= gamma/(4.*np.pi)
     return v_ind
 
@@ -95,7 +95,7 @@ def v_induced_by_finite_vortex_line(P, A, B, gamma=1):
     PA_cross_PB = np.cross(PA, PB)
 
     if is_in_vortex_core([PA, PB, PA_cross_PB]):
-        return [0,0,0]
+        return [0, 0, 0]
 
     else:
         v_ind = PA_cross_PB / np.square(norm(PA_cross_PB))

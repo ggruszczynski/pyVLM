@@ -1,7 +1,7 @@
 import numpy as np
 from numpy.testing import assert_almost_equal
 
-from solver.geometry_calc import rotation_matrix
+from Solver.geometry_calc import rotation_matrix
 from unittest import TestCase
 
 

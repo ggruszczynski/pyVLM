@@ -1,8 +1,8 @@
 import numpy as np
 from numpy.testing import assert_almost_equal
 
-from solver.panel import Panel
-from solver.mesher import \
+from Solver.panel import Panel
+from Solver.mesher import \
     make_panels_from_points, \
     discrete_segment, \
     make_point_mesh

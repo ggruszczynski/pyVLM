@@ -6,7 +6,7 @@
 import numpy as np
 from numpy.testing import assert_almost_equal
 
-from solver.panel import Panel
+from Solver.panel import Panel
 from unittest import TestCase
 
 
@@ -24,7 +24,7 @@ class TestPanels(TestCase):
         assert_almost_equal(calculated_area, expected_area)
 
     def test_pressure(self):
-        from solver.forces import calc_pressure
+        from Solver.forces import calc_pressure
 
         p = calc_pressure(force=np.array([[0, 0, 1], [3, 2, 1]]),
                           panels=np.array([self.panel, self.panel]))
@@ -32,7 +32,7 @@ class TestPanels(TestCase):
         assert_almost_equal(p, [0.01, 0.01])
 
     def test_get_ctr_point_postion(self):
-        ctr_point = self.panel.get_ctr_point_postion()
+        ctr_point = self.panel.get_ctr_point_position()
         expected_ctr_point = [7.5, 5, 0]
 
         assert_almost_equal(expected_ctr_point, ctr_point)
