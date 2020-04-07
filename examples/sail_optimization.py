@@ -1,6 +1,6 @@
 import numpy as np
 
-from Solver.vlm_solver import calc_induced_velocity
+from Solver.vlm_solver import calc_induced_velocity, is_no_flux_BC_satisfied
 from Solver.mesher import make_panels_from_points
 from Solver.geometry_calc import rotation_matrix
 from Solver.llt_sail_opt_solver import calc_circulation_llt
@@ -79,14 +79,14 @@ tws_at_ctr_points = np.array([winds.get_true_wind_speed_at_h(abs(ctr_point[2])) 
 V_app_infs = np.array([winds.get_app_infs_at_h(tws_at_ctr_point) for tws_at_ctr_point in tws_at_ctr_points])
 
 gamma_magnitude, v_ind_coeff = calc_circulation_llt(V_app_infs, panels)
-V_induced = calc_induced_velocity(v_ind_coeff, gamma_magnitude)
-V_app_fs = V_app_infs + V_induced
 
+V_induced = calc_induced_velocity(v_ind_coeff, gamma_magnitude)
+V_app_fs = V_app_infs - V_induced
 spans = np.array([panel.get_panel_span() for panel in panels1D])
 Thrust_inviscid_per_Panel = V_app_fs[:, 1] * gamma_magnitude * spans * rho
-Thrust_inviscid_total = sum(Thrust_inviscid_per_Panel)
+Thrust_inviscid_total = sum(Thrust_inviscid_per_Panel)/2
 print(f"Thrust in the direction of yacht movement (including leeway) without profile drag = {Thrust_inviscid_total} [N]")
-# assert is_no_flux_BC_satisfied(V_app_fw, panels)
+# assert is_no_flux_BC_satisfied(V_app_fs, panels)
 
 ### Calculate chord assuming CL
 
@@ -100,8 +100,8 @@ alfa_0 = -2.0 * np.pi/180
 
 alfa_app_fs = np.arctan(V_app_fs[:, 1]/V_app_fs[:, 0])
 alfa_app_infs = np.array([winds.get_app_alfa_infs_at_h(tws_at_ctr_point) for tws_at_ctr_point in tws_at_ctr_points])
-alfa_ind = alfa_app_fs - alfa_app_infs
-phi = alfa_app_infs - alfa_0 - CL/a  # sail_twist eq.2.22 from GG
+alfa_ind = alfa_app_infs - alfa_app_fs
+phi = alfa_app_fs - alfa_0 - CL/a  # sail_twist eq.2.22 from GG
 phi_deg = np.rad2deg(phi)
 # phi_boom = phi[0] - phi # take the middle one
 

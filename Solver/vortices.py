@@ -8,7 +8,7 @@ def normalize(x):
 
 def is_in_vortex_core(tab):
     for t in tab:
-        if norm(t) <  1e-9:
+        if norm(t) < 1e-9:
             return True
 
 
