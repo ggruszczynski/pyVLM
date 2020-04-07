@@ -93,4 +93,5 @@ CD_vlm = total_F[0] / q
 print("\nCL_expected %f \t CD_ind_expected %f" % (CL_expected, CD_ind_expected))
 print("CL_vlm %f \t CD_vlm %f" % (CL_vlm, CD_vlm))
 print("\n\ntotal_F %s" % str(total_F))
+
 print("=== END ===")
