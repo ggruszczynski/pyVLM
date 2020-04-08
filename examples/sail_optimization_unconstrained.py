@@ -12,7 +12,7 @@ from Solver.winds import Winds
     This example shows how to use the pyVLM class in order
     to generate the wing planform.
 
-    After defining the flight conditions (airspeed and AOA),
+    After defining the conditions (airspeed and AOA),
     the geometry will be characterised using the following
     nomenclature:
 
@@ -28,25 +28,22 @@ from Solver.winds import Winds
 
 """
 
-### WING DEFINITION ###
+### SAIL DEFINITION ###
+# This example follows the case 4.2.1 from GGruszczynski BSc Thesis 'Optimization of an upwind sail geometry in order to maximize thrust.' 2013
 # Parameters #
-chord = 0  # chord length
-half_wing_span = 10.  # half wing span length
+sail_span = 10.  # height of the sail
 
 # Points defining wing (x,y,z) #
+le_NW = np.array([0, 0., sail_span, ])  # leading edge North - West coordinate
+# mirror in water surface
+le_SW = np.array([0, 0., -sail_span])  # leading edge South - West coordinate
 
-le_NW = np.array([0, 0., half_wing_span, ])  # leading edge North - West coordinate
-le_SW = np.array([0, 0., -half_wing_span])  # leading edge South - West coordinate
-# le_SW = np.array([0., 0, 0.])  # leading edge South - West coordinate
-
-te_NE = np.array([chord, 0, half_wing_span])  # trailing edge North - East coordinate
-te_SE = np.array([chord, 0., -half_wing_span])  # trailing edge South - East coordinate
-# te_SE = np.array([chord, 0, 0.])  # trailing edge South - East coordinate
+# make a lifting line instead of panels
+te_NE = le_NW  # trailing edge North - East coordinate
+te_SE = le_SW  # trailing edge South - East coordinate
 
 AoA_deg = 0.0  # Angle of attack [deg]
 Ry = rotation_matrix([0, 1, 0], np.deg2rad(AoA_deg))
-
-
 
 ### MESH DENSITY ###
 ns = 20  # number of panels (spanwise)
@@ -60,13 +57,10 @@ panels, mesh = make_panels_from_points(
     [nc, ns])
 
 ### FLIGHT CONDITIONS ###
-# rows, cols = panels.shape
-# N = rows * cols
 tws_ref = 10  # Free stream of true wind having velocity [m/s] at height z = 10 [m]
 V_yacht = 15  # [m/s]
-# V_yacht = 0  # [m/s]
-alfa_real_deg = 15  # [deg] angle between true wind and direction of boat movement (including leeway)
 
+alfa_real_deg = 15  # [deg] angle between true wind and direction of boat movement (including leeway)
 rho = 1.225  # fluid density [kg/m3]
 
 ### CALCULATIONS ###
@@ -86,7 +80,6 @@ spans = np.array([panel.get_panel_span() for panel in panels1D])
 Thrust_inviscid_per_Panel = V_app_fs[:, 1] * gamma_magnitude * spans * rho
 Thrust_inviscid_total = sum(Thrust_inviscid_per_Panel)/2
 print(f"Thrust in the direction of yacht movement (including leeway) without profile drag = {Thrust_inviscid_total} [N]")
-# assert is_no_flux_BC_satisfied(V_app_fs, panels)
 
 ### Calculate chord assuming CL
 

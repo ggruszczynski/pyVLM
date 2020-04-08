@@ -21,7 +21,7 @@ def assembly_sys_of_eq_llt(V_app_infs, panels):
             A[i][j] = (v_ind_coeff[i][j][1] * panels1D[j].get_panel_span() \
                        + v_ind_coeff[j][i][1] * panels1D[i].get_panel_span())
 
-    return A, RHS, v_ind_coeff  # np.array(v_ind_coeff)
+    return A, RHS, v_ind_coeff
 
 
 def calc_circulation_llt(V_app_infs, panels):

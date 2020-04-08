@@ -36,15 +36,17 @@ class TestForces(TestCase):
 
         ### WING DEFINITION ###
         # Parameters #
-        # This example follows the case 4.2.1 from GGruszczynski BSc Thesis
-        chord = 0  # chord length - in the LLT theory the ctr points lay on the lifting line
-        half_wing_span = 10.  # half wing span length
+        # This example follows the case 4.2.1 from GGruszczynski BSc Thesis 'Optimization of an upwind sail geometry in order to maximize thrust.' 2013
+        sail_span = 10.  # height of the sail
 
         # Points defining wing (x,y,z) #
-        le_NW = np.array([0, 0., half_wing_span, ])  # leading edge North - West coordinate
-        le_SW = np.array([0, 0., -half_wing_span])  # leading edge South - West coordinate
-        te_NE = np.array([chord, 0, half_wing_span])  # trailing edge North - East coordinate
-        te_SE = np.array([chord, 0., -half_wing_span])  # trailing edge South - East coordinate
+        le_NW = np.array([0, 0., sail_span, ])  # leading edge North - West coordinate
+        # mirror in water surface
+        le_SW = np.array([0, 0., -sail_span])  # leading edge South - West coordinate
+
+        # make a lifting line instead of panels
+        te_NE = le_NW  # trailing edge North - East coordinate
+        te_SE = le_SW  # trailing edge South - East coordinate
 
         AoA_deg = 0.0  # Angle of attack [deg]
         Ry = rotation_matrix([0, 1, 0], np.deg2rad(AoA_deg))
