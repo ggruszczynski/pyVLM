@@ -119,3 +119,15 @@ class TestForces(TestCase):
                                      -4.96381481, -4.96381481, -4.96381481, -4.96381481, -4.96381481])
 
         assert_almost_equal(phi_deg_expected, phi_deg)
+
+        V_app_fs_length = np.linalg.norm(V_app_fs, axis=1)
+        chord = 2 * gamma_magnitude / (CL * V_app_fs_length)  # eq2.21 from GG
+
+        # Total aerodynamic force acting on the sail; section 2.2.2 from GG
+        Fa = 0.5 * rho * V_app_fs_length * V_app_fs_length * np.sqrt(CL * CL + CD * CD) * chord
+        psi = np.arctan(CD / CL)
+        theta = np.pi / 2 + psi - alfa_app_fs
+        Thrust_viscid_per_Panel = Fa * np.cos(theta)
+        Thrust_viscid_total = sum(Thrust_viscid_per_Panel) / 2  # half of the sail is mirrored in the water
+
+        assert_almost_equal(521.9046999835174, Thrust_viscid_total)

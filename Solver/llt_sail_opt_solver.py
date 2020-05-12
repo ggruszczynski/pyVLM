@@ -1,6 +1,5 @@
 import numpy as np
 
-
 def assembly_sys_of_eq_llt(V_app_infs, panels):
     panels1D = panels.flatten()
     N = len(panels1D)
@@ -25,8 +24,7 @@ def assembly_sys_of_eq_llt(V_app_infs, panels):
 
 
 def calc_circulation_llt(V_app_infs, panels):
-    # it is assumed that the freestream velocity is V [vx,vy,0], where vx > 0  # TODO: ensure that it is right - different csys in case of rectangular wing?
-
+    # it is assumed that the freestream velocity is V [vx,vy,0], where vx,vy > 0
     A, RHS, v_ind_coeff = assembly_sys_of_eq_llt(V_app_infs, panels)
     gamma_magnitude = np.linalg.solve(A, RHS)
 

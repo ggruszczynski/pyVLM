@@ -33,14 +33,15 @@ from Solver.winds import Winds
 # Parameters #
 sail_span = 10.  # height of the sail
 
-# Points defining wing (x,y,z) #
-le_NW = np.array([0, 0., sail_span, ])  # leading edge North - West coordinate
+# Points defining wing (x,y,z)
+le_NW = np.array([0, 0., sail_span])  # leading edge North - West coordinate
 # mirror in water surface
 le_SW = np.array([0, 0., -sail_span])  # leading edge South - West coordinate
 
 # make a lifting line instead of panels
 te_NE = le_NW  # trailing edge North - East coordinate
 te_SE = le_SW  # trailing edge South - East coordinate
+
 
 AoA_deg = 0.0  # Angle of attack [deg]
 Ry = rotation_matrix([0, 1, 0], np.deg2rad(AoA_deg))
@@ -57,7 +58,7 @@ panels, mesh = make_panels_from_points(
     [nc, ns])
 
 ### FLIGHT CONDITIONS ###
-tws_ref = 10  # Free stream of true wind having velocity [m/s] at height z = 10 [m]
+tws_ref = 10  # Free stream of true wind with velocity [m/s] at height z = 10 [m]
 V_yacht = 15  # [m/s]
 
 alfa_real_deg = 15  # [deg] angle between true wind and direction of boat movement (including leeway)
@@ -69,7 +70,6 @@ winds = Winds(alfa_real_deg=alfa_real_deg, tws_ref=tws_ref, V_yacht=V_yacht, is_
 panels1D = panels.flatten()
 ctr_points = np.array([panel.get_ctr_point_position() for panel in panels1D])
 tws_at_ctr_points = np.array([winds.get_true_wind_speed_at_h(abs(ctr_point[2])) for ctr_point in ctr_points])
-
 V_app_infs = np.array([winds.get_app_infs_at_h(tws_at_ctr_point) for tws_at_ctr_point in tws_at_ctr_points])
 
 gamma_magnitude, v_ind_coeff = calc_circulation_llt(V_app_infs, panels)
@@ -78,7 +78,7 @@ V_induced = calc_induced_velocity(v_ind_coeff, gamma_magnitude)
 V_app_fs = V_app_infs - V_induced
 spans = np.array([panel.get_panel_span() for panel in panels1D])
 Thrust_inviscid_per_Panel = V_app_fs[:, 1] * gamma_magnitude * spans * rho
-Thrust_inviscid_total = sum(Thrust_inviscid_per_Panel)/2
+Thrust_inviscid_total = sum(Thrust_inviscid_per_Panel)/2   # half of the sail is mirrored in the water
 print(f"Thrust in the direction of yacht movement (including leeway) without profile drag = {Thrust_inviscid_total} [N]")
 
 ### Calculate chord assuming CL
@@ -97,6 +97,16 @@ alfa_ind = alfa_app_infs - alfa_app_fs
 phi = alfa_app_fs - alfa_0 - CL/a  # sail_twist eq.2.22 from GG
 phi_deg = np.rad2deg(phi)
 # phi_boom = phi[0] - phi # take the middle one
+V_app_fs_length = np.linalg.norm(V_app_fs, axis=1)
+chord = 2*gamma_magnitude/(CL*V_app_fs_length)  # eq2.21 from GG
+
+# Total aerodynamic force acting on the sail; section 2.2.2 from GG
+Fa = 0.5*rho*V_app_fs_length*V_app_fs_length*np.sqrt(CL*CL+CD*CD)*chord
+psi = np.arctan(CD/CL)
+theta = np.pi/2 + psi - alfa_app_fs
+Thrust_viscid_per_Panel = Fa*np.cos(theta)
+Thrust_viscid_total = sum(Thrust_viscid_per_Panel)/2  # half of the sail is mirrored in the water
+print(f"Thrust in the direction of yacht movement (including leeway) with profile drag = {Thrust_viscid_total} [N]")
 
 
 import matplotlib.pyplot as plt
@@ -113,8 +123,8 @@ plt.figure(figsize=(14, 8))
 axes = plt.gca()
 upper_half = int(ns/2)
 plt.plot(gamma_magnitude[upper_half:], ctr_points[upper_half:, 2],
-         color="black", marker="x", markevery=1, markersize=5, linestyle="--", linewidth=2,
-         label='gamma_magnitude')
+         color="black", marker="x", markevery=1, markersize=10, linestyle="-", linewidth=2,
+         label=r'$\Gamma_{optimal}$')
 
 # plt.plot(phi_deg[upper_half:], ctr_points[upper_half:, 2],
 #          color="black", marker="x", markevery=1, markersize=5, linestyle="--", linewidth=2,
